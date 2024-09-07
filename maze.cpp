@@ -56,10 +56,36 @@ void close()
 }
 int main( int argc, char* args[] )
 {
-    init();
-	load();
-	SDL_BlitSurface(img_surface, NULL, main_surface, NULL);
-	SDL_UpdateWindowSurface(main_window);
-	SDL_Event e; bool quit = false; while( quit == false ){ while( SDL_PollEvent( &e ) ){ if( e.type == SDL_QUIT ) quit = true; } }
-	close();
+    if (!init())
+	{
+		printf("failed to inialize the game");
+		return (1);
+	}
+	else
+	{
+		if (!load())
+		{
+			printf("failed to load image");
+			close();
+		}
+		else
+		{	
+			bool quite = false;
+			SDL_Event e;
+
+			while(!quite)
+			{
+				while (SDL_PollEvent(&e))
+				{
+					if (e.type == SDL_QUIT)
+					{
+						quite = true;
+					}
+				}
+				SDL_BlitSurface(img_surface, NULL, main_surface, NULL);
+				SDL_UpdateWindowSurface(main_window);
+			}
+			close();
+		}
+	}
 }
