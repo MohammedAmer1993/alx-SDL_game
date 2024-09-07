@@ -7,7 +7,13 @@ CFLAGES =
 SRC = maze.cpp
 OBJ = $(SRC:.cpp=.o)
 NAME = mymaze
+RM = rm
 
 
 all:
 	$(CC) $(SRC) $(LINKERFLAGS) $(CFLAGES) -o $(NAME)
+
+clean:
+	-@$(RM) $(NAME) 
+
+re: clean all
