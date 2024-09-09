@@ -4,16 +4,20 @@
 CC = g++
 LINKERFLAGS = -lSDL2 -lSDL2_image
 CFLAGES = -Wall -Werror -Wextra -pedantic
-SRC = maze.cpp
+SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 NAME = mymaze
 RM = rm
 
 
-all:
-	$(CC) $(SRC) $(LINKERFLAGS) $(CFLAGES) -o $(NAME)
+all: $(OBJ)
+	echo $(SRC)
+	echo $(OBJ)
+	$(CC) $(OBJ) $(LINKERFLAGS) $(CFLAGES) -o $(NAME)
 
 clean:
 	-@$(RM) $(NAME) $(OBJ)
 
 re: clean all
+
+$(OBJ): def.h

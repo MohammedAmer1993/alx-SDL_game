@@ -1,25 +1,5 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <stdio.h>
-#include <string>
+#include "def.h"
 
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
-
-SDL_Window * main_window = NULL;
-SDL_Surface * main_surface = NULL;
-SDL_Surface * img_surface = NULL;
-
-enum key {
-	keydefault, keyup, keydown, keyright, keyleft, total
-};
-
-SDL_Surface * keyarr[total];
-
-int init();
-SDL_Surface * loadOneSurface(std::string path);
-int load();
-void close();
 
 int init()
 {
@@ -135,68 +115,4 @@ void close()
 	main_window = NULL;
 
 	SDL_Quit();
-}
-int main( int argc, char** argv )
-{
-	(void) argc;
-	(void) argv;
-	SDL_Rect imgStretchedRect;
-
-    if (init() == false)
-	{
-		printf("failed to inialize the game");
-		return (1);
-	}
-	else
-	{
-		if (load() == false)
-		{
-			printf("failed to load image");
-			close();
-		}
-		else
-		{	
-			bool quite = false;
-			SDL_Event e;
-			while(!quite)
-			{
-				while (SDL_PollEvent(&e))
-				{
-					if (e.type == SDL_QUIT)
-					{
-						quite = true;
-					}
-					else if( e.type == SDL_KEYDOWN )
-					{
-						switch (e.key.keysym.sym)
-						{
-						case SDLK_UP:
-							img_surface = keyarr[keyup];
-							break;
-						case SDLK_DOWN:
-							img_surface = keyarr[keydown];
-							break;
-						case SDLK_RIGHT:
-							img_surface = keyarr[keyright];
-							break;
-						case SDLK_LEFT:
-							img_surface = keyarr[keyleft];
-							break;
-						
-						default:
-							img_surface = keyarr[keydefault];
-							break;
-						}
-					}
-					imgStretchedRect.x = 0;
-					imgStretchedRect.y = 0;
-					imgStretchedRect.h = SCREEN_HEIGHT;
-					imgStretchedRect.w = SCREEN_WIDTH;
-					SDL_BlitScaled(img_surface, NULL, main_surface, &imgStretchedRect);
-					SDL_UpdateWindowSurface(main_window);
-				}
-			}
-			close();
-		}
-	}
 }
