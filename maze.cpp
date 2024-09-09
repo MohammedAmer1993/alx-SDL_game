@@ -1,8 +1,9 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <string>
 
-#define SCREEN_WIDTH 720
-#define SCREEN_HEIGHT 1080
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 
 SDL_Window * main_window = NULL;
 SDL_Surface * main_surface = NULL;
@@ -14,6 +15,10 @@ enum key {
 
 SDL_Surface * keyarr[total];
 
+int init();
+SDL_Surface * loadsurface(std::string path);
+int load();
+void close();
 
 int init()
 {
@@ -43,32 +48,32 @@ int load()
 {
 	bool status = true;
 
-	keyarr[keydefault] = SDL_LoadBMP("./img/keydefault.bmp");
+	keyarr[keydefault] = loadsurface("./img/keydefault.bmp");
 	img_surface = keyarr[keydefault];
 	if (keyarr[keydefault] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keyup] = SDL_LoadBMP("./img/keyup.bmp");
+	keyarr[keyup] = loadsurface("./img/keyup.bmp");
 	if (keyarr[keyup] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keydown] = SDL_LoadBMP("./img/keydown.bmp");
+	keyarr[keydown] = loadsurface("./img/keydown.bmp");
 	if (keyarr[keydown] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keyright] = SDL_LoadBMP("./img/keyright.bmp");
+	keyarr[keyright] = loadsurface("./img/keyright.bmp");
 	if (keyarr[keyright] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keyleft] = SDL_LoadBMP("./img/keyleft.bmp");
+	keyarr[keyleft] = loadsurface("./img/keyleft.bmp");
 	if (keyarr[keyleft] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
@@ -77,8 +82,40 @@ int load()
 	return (status);
 }
 
+SDL_Surface * loadsurface(std::string path)
+{
+	SDL_Surface* optimizedsurface = NULL;
+	SDL_Surface* loadedsurface = NULL;
+
+	loadedsurface = SDL_LoadBMP(path.c_str());
+	if (loadedsurface == NULL)
+	{
+		printf("failed to load image %s, error: %s\n", path.c_str(), SDL_GetError());
+		return (NULL);
+	}
+	else
+	{
+		optimizedsurface = SDL_ConvertSurface(loadedsurface, main_surface->format, 0);
+		if (optimizedsurface == NULL)
+		{
+			printf("couldn't optimize surface");
+			return (NULL);
+		}
+		else
+		{
+			SDL_FreeSurface(loadedsurface);
+			return (optimizedsurface);
+		}
+	}
+}
+
 void close() 
 {
+	for (int i = 0; i < total; ++i)
+	{
+		SDL_FreeSurface(keyarr[i]);
+		keyarr[i] = NULL;
+	}
 	SDL_FreeSurface(main_surface);
 	main_surface = NULL;
 
@@ -89,6 +126,7 @@ void close()
 }
 int main( int argc, char* args[] )
 {
+	SDL_Rect imgStretchedRect;
     if (init() == false)
 	{
 		printf("failed to inialize the game");
@@ -135,7 +173,11 @@ int main( int argc, char* args[] )
 							break;
 						}
 					}
-					SDL_BlitSurface(img_surface, NULL, main_surface, NULL);
+					imgStretchedRect.x = 0;
+					imgStretchedRect.y = 0;
+					imgStretchedRect.h = SCREEN_HEIGHT;
+					imgStretchedRect.w = SCREEN_WIDTH;
+					SDL_BlitScaled(img_surface, NULL, main_surface, &imgStretchedRect);
 					SDL_UpdateWindowSurface(main_window);
 				}
 			}

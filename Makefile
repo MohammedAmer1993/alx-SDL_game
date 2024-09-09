@@ -14,6 +14,6 @@ all:
 	$(CC) $(SRC) $(LINKERFLAGS) $(CFLAGES) -o $(NAME)
 
 clean:
-	-@$(RM) $(NAME) 
+	-@$(RM) $(NAME) $(OBJ)
 
 re: clean all
