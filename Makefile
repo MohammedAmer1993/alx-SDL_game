@@ -4,20 +4,34 @@
 CC = g++
 LINKERFLAGS = -lSDL2 -lSDL2_image
 CFLAGES = -Wall -Werror -Wextra -pedantic
+TCFLAGES = 
+TNAME = test
 SRC = $(wildcard *.cpp)
-OBJ = $(SRC:.cpp=.o)
-NAME = mymaze
+OBJ = $(filter-out test.o, $(SRC:.cpp=.o))
+NAME = maze
 RM = rm
 
+.PHONY: debug all clean re tclean test
 
 all: $(OBJ)
-	echo $(SRC)
-	echo $(OBJ)
 	$(CC) $(OBJ) $(LINKERFLAGS) $(CFLAGES) -o $(NAME)
 
-clean:
+re: oclean all
+
+debug: oclean $(OBJ)
+	$(CC) $(OBJ) $(LINKERFLAGS) $(CFLAGES) -g -o $(NAME)
+
+
+test: 
+	$(CC) test.cpp $(LINKERFLAGS) $(TCFLAGES) -o $(TNAME)
+
+tclean: 
+	-@$(RM) test test.o
+
+oclean:
 	-@$(RM) $(NAME) $(OBJ)
 
-re: clean all
+clean: tclean oclean
 
 $(OBJ): def.h
+
