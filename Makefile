@@ -2,8 +2,8 @@
 #the name of the output game will be "maze" may be I will change it in the future
 
 CC = g++
-LINKERFLAGS = -lSDL2
-CFLAGES = 
+LINKERFLAGS = -lSDL2 -lSDL2_image
+CFLAGES = -Wall -Werror -Wextra -pedantic
 SRC = maze.cpp
 OBJ = $(SRC:.cpp=.o)
 NAME = mymaze

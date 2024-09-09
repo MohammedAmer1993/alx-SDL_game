@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string>
 
@@ -16,13 +17,14 @@ enum key {
 SDL_Surface * keyarr[total];
 
 int init();
-SDL_Surface * loadsurface(std::string path);
+SDL_Surface * loadOneSurface(std::string path);
 int load();
 void close();
 
 int init()
 {
 	bool status = true;
+
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		printf("couldn't initialize video subsystem, error: %s", SDL_GetError());
@@ -38,7 +40,16 @@ int init()
 		}
 		else
 		{
-			main_surface = SDL_GetWindowSurface(main_window);
+			int flags = IMG_INIT_PNG;
+			if (!(IMG_Init(flags) & flags)) // this is the cryptic way to make sure everything is fine and please don't send him SDL owner a massage saying this is a bug
+			{
+				printf("couldn't initialize the png subsystem, error %s", IMG_GetError());
+				status = false;
+			}
+			else
+			{
+				main_surface = SDL_GetWindowSurface(main_window);
+			}
 		}
 	}
 	return (status);
@@ -48,32 +59,32 @@ int load()
 {
 	bool status = true;
 
-	keyarr[keydefault] = loadsurface("./img/keydefault.bmp");
+	keyarr[keydefault] = loadOneSurface("./imgpng/keydefault.png");
 	img_surface = keyarr[keydefault];
 	if (keyarr[keydefault] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keyup] = loadsurface("./img/keyup.bmp");
+	keyarr[keyup] = loadOneSurface("./imgpng/keyup.png");
 	if (keyarr[keyup] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keydown] = loadsurface("./img/keydown.bmp");
+	keyarr[keydown] = loadOneSurface("./imgpng/keydown.png");
 	if (keyarr[keydown] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keyright] = loadsurface("./img/keyright.bmp");
+	keyarr[keyright] = loadOneSurface("./imgpng/keyright.png");
 	if (keyarr[keyright] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
 		status = false;
 	}
-	keyarr[keyleft] = loadsurface("./img/keyleft.bmp");
+	keyarr[keyleft] = loadOneSurface("./imgpng/keyleft.png");
 	if (keyarr[keyleft] == NULL)
 	{
 		printf("failed to load image, error: %s", SDL_GetError());
@@ -82,15 +93,15 @@ int load()
 	return (status);
 }
 
-SDL_Surface * loadsurface(std::string path)
+SDL_Surface * loadOneSurface(std::string path)
 {
 	SDL_Surface* optimizedsurface = NULL;
 	SDL_Surface* loadedsurface = NULL;
 
-	loadedsurface = SDL_LoadBMP(path.c_str());
+	loadedsurface = IMG_Load(path.c_str());
 	if (loadedsurface == NULL)
 	{
-		printf("failed to load image %s, error: %s\n", path.c_str(), SDL_GetError());
+		printf("failed to load image %s, error: %s\n", path.c_str(), IMG_GetError());
 		return (NULL);
 	}
 	else
@@ -99,6 +110,7 @@ SDL_Surface * loadsurface(std::string path)
 		if (optimizedsurface == NULL)
 		{
 			printf("couldn't optimize surface");
+			SDL_FreeSurface(loadedsurface);
 			return (NULL);
 		}
 		else
@@ -124,9 +136,12 @@ void close()
 
 	SDL_Quit();
 }
-int main( int argc, char* args[] )
+int main( int argc, char** argv )
 {
+	(void) argc;
+	(void) argv;
 	SDL_Rect imgStretchedRect;
+
     if (init() == false)
 	{
 		printf("failed to inialize the game");
