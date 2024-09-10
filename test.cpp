@@ -67,5 +67,10 @@ int main( int argc, char** argv )
 			}
 		}
 	}
+	SDL_DestroyRenderer(render);
+	render = NULL;
+	SDL_DestroyWindow(window);
+	window = NULL;
+	SDL_Quit();
 	return (state);
 }
