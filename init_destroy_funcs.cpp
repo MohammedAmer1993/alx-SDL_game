@@ -151,9 +151,7 @@ SDL_Texture* loadTexture(std::string path)
 	}
 	else
 	{
-		printf("%p\n", window_renderer);
 		texture = SDL_CreateTextureFromSurface(window_renderer, loadedSurface);
-		printf("%p\n", texture);
 		if (texture == NULL)
 		{
 			printf("couldn't load textur from surface, Error: %s\n", SDL_GetError());
