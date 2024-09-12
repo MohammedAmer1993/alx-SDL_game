@@ -3,10 +3,13 @@
 
 CC = g++
 LINKERFLAGS = -lSDL2 -lSDL2_image
-CFLAGES = -Wall -Werror -Wextra -pedantic
+CFLAGES = -Wall -Werror -Wextra -pedantic -I inc
+CPPFLAGS = -Wall -Werror -Wextra -pedantic -I inc
 TCFLAGES = 
 TNAME = test
-SRC = $(wildcard *.cpp)
+HEADERS = $(wildcard inc/*.h)
+SRC = $(wildcard src/*.cpp)
+SRC += main.cpp
 OBJ = $(filter-out test.o, $(SRC:.cpp=.o))
 NAME = maze
 RM = rm
@@ -29,9 +32,10 @@ tclean:
 	-@$(RM) test test.o
 
 oclean:
-	-@$(RM) $(NAME) $(OBJ)
+	-@$(RM) $(OBJ)
 
 clean: tclean oclean
+	-@$(RM) $(NAME)
 
-$(OBJ): def.h
+$(OBJ): $(HEADERS)
 
