@@ -12,9 +12,7 @@ int main( int argc, char** argv )
 	SDL_Texture* window_texture1 = NULL;
 	SDL_Texture* window_texture2 = NULL;
 
-	Uint8 R = 255;
-	Uint8 G = 255;
-	Uint8 B = 255;
+	Uint8 a = 255;
 
 
     if (init(&main_window, &window_renderer) == false)
@@ -46,23 +44,25 @@ int main( int argc, char** argv )
 					{
 						switch (e.key.keysym.sym)
 						{
-						case SDLK_w:
-							R += 70;
-							break;
-						case SDLK_s:
-							R -= 70;
-							break;
 						case SDLK_d:
-							G += 70;
+							if (a + 32 > 255)
+							{
+								a = 255;
+							}
+							else
+							{
+								a += 32;
+							}
 							break;
-						case SDLK_a:
-							G -= 70;
-							break;
-						case SDLK_z:
-							B += 70;
-							break;
-						case SDLK_r:
-							B -= 70;
+						case SDLK_f:
+							if (a - 32 < 0)
+							{
+								a = 0;
+							}
+							else
+							{
+								a -= 32;
+							}
 							break;
 						default:
 							break;
@@ -70,8 +70,10 @@ int main( int argc, char** argv )
 					}
 						SDL_SetRenderDrawColor(window_renderer,0xff, 0xff, 0xff, 0xff);
 						SDL_RenderClear(window_renderer);
-						SDL_SetTextureColorMod(window_texture1, R, G, B);
+						SDL_SetTextureBlendMode(window_texture2, SDL_BLENDMODE_BLEND);
+						SDL_SetTextureAlphaMod(window_texture2, a);
 						SDL_RenderCopy(window_renderer, window_texture1, NULL, NULL);
+						SDL_RenderCopy(window_renderer, window_texture2, NULL, NULL);
 						SDL_RenderPresent(window_renderer);
 				}
 			}
