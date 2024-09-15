@@ -3,6 +3,7 @@
 int init(SDL_Window** main_window, SDL_Renderer** window_renderer)
 {
 	bool status = true;
+
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		printf("couldn't initialize video subsystem, error: %s", SDL_GetError());
@@ -39,18 +40,25 @@ int init(SDL_Window** main_window, SDL_Renderer** window_renderer)
 					printf("couldn't initialize the png subsystem, error %s", IMG_GetError());
 					status = false;
 				}
+
+				if (TTF_Init() < 0)
+				{
+					printf("couldn't initalize the ttf library\nError: %s\n", TTF_GetError());
+					status = false;
+				}
 			}
 		}
 	}
 	return (status);
 }
 
-int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer)
+int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer, int* w, int* h)
 {
 	int success = 0;
 	SDL_Surface* main = NULL;
 	SDL_Surface* sec = NULL;
-	main = loadOneSurface("img_png/mario.png");
+	SDL_Color color = {0, 0, 0, 255};
+	main = createSurfaceFromFont("fonts/lazy.ttf", 36, "this is me don't stop believing 12345", color, w, h);
 	sec = loadOneSurface("img_png/backmario.png");
 	if (main == NULL or sec == NULL)
 	{
@@ -84,6 +92,7 @@ void close(SDL_Window* main_window, SDL_Renderer* window_renderer, SDL_Texture* 
 	closeTexture(text2);
 	closeRenderer(window_renderer);
 	closeWindow(main_window);
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }

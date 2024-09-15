@@ -9,7 +9,7 @@
 #include "util.h"
 
 int init(SDL_Window** main_window, SDL_Renderer** window_renderer);
-int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer);
+int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer, int* w, int* h);
 void close(SDL_Window* main_window, SDL_Renderer* window_renderer, SDL_Texture* text1, SDL_Texture* text2);
 
 #endif //OPER_H_

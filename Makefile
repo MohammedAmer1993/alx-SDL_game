@@ -2,7 +2,7 @@
 #the name of the output game will be "maze" may be I will change it in the future
 
 CC = g++
-LINKERFLAGS = -lSDL2 -lSDL2_image
+LINKERFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
 CFLAGES = -Wall -Werror -Wextra -pedantic -I inc
 CPPFLAGS = -Wall -Werror -Wextra -pedantic -I inc
 TCFLAGES = 

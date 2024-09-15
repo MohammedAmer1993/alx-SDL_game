@@ -1,8 +1,12 @@
 #include "util.h"
 
-
-int loadImgArr(SDL_Surface* keyarr[])
+/*
+	this function work on global variable keyarr[]
+	in the future I will make it create and return pointer to array
+*/
+int loadImgArr(SDL_Surface* keyarr[]) 
 {
+
 	bool status = true;
 
 	keyarr[keydefault] = loadOneSurface("img_png/keydefault.png");
@@ -71,6 +75,12 @@ SDL_Surface* optimizeSurface(SDL_Surface* surface, SDL_PixelFormat* fmt)
 	}
 }
 
+
+/*
+	this function works on global variable or I think there is something wrong
+	the intention is to make it work on an array passed to it 
+	I will look at it later
+*/
 void closeImgArr(SDL_Window* main_window, SDL_Surface* main_surface, SDL_Surface** keyarr) 
 {
 	for (int i = 0; i < total; ++i)
@@ -129,4 +139,25 @@ int widPos(SDL_Rect clip)
 int hiPos(SDL_Rect clip)
 {
 	return ((SCREEN_HEIGHT / 2) - (clip.h / 2));
+}
+
+SDL_Surface* createSurfaceFromFont(std::string path, int size, std::string str, SDL_Color color, int* w, int* h)
+{
+	SDL_Surface* surface = NULL;
+	TTF_Font* font = NULL;
+	font = TTF_OpenFont(path.c_str(), size);
+	surface = TTF_RenderText_Solid(font, str.c_str(), color);
+	if (surface == NULL)
+	{
+		printf("couldn't create surface from font\nError: %s\n",TTF_GetError());
+		free(font);
+		return (NULL);
+	}
+	else
+	{
+		free(font);
+		*w = surface->w;
+		*h = surface->h;
+		return (surface);
+	}
 }
