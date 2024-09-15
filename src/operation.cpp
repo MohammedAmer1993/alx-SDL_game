@@ -50,7 +50,7 @@ int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer)
 	int success = 0;
 	SDL_Surface* main = NULL;
 	SDL_Surface* sec = NULL;
-	main = loadOneSurface("img_png/sprites.png");
+	main = loadOneSurface("img_png/mario.png");
 	sec = loadOneSurface("img_png/backmario.png");
 	if (main == NULL or sec == NULL)
 	{
