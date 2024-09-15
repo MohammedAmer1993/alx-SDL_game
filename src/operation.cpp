@@ -24,7 +24,7 @@ int init(SDL_Window** main_window, SDL_Renderer** window_renderer)
 		}
 		else
 		{
-			*window_renderer = SDL_CreateRenderer(*main_window, -1, SDL_RENDERER_ACCELERATED);
+			*window_renderer = SDL_CreateRenderer(*main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 			if (window_renderer == NULL)
 			{
 				printf("couldn't create renderer %s", SDL_GetError());
@@ -50,8 +50,8 @@ int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer)
 	int success = 0;
 	SDL_Surface* main = NULL;
 	SDL_Surface* sec = NULL;
-	main = loadOneSurface("img_png/backmario.png");
-	sec = loadOneSurface("img_png/fade.png");
+	main = loadOneSurface("img_png/sprites.png");
+	sec = loadOneSurface("img_png/backmario.png");
 	if (main == NULL or sec == NULL)
 	{
 		success = 1;
@@ -80,6 +80,7 @@ int load(SDL_Texture** texture1, SDL_Texture** texture2, SDL_Renderer* renderer)
 void close(SDL_Window* main_window, SDL_Renderer* window_renderer, SDL_Texture* text1, SDL_Texture* text2)
 {
 	closeTexture(text1);
+
 	closeTexture(text2);
 	closeRenderer(window_renderer);
 	closeWindow(main_window);

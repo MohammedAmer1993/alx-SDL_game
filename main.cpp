@@ -1,7 +1,9 @@
 #include "inc/maze.h"
 
+#define WALKING_FRAME 5
 
 SDL_Surface* keyarr[total];
+
 
 int main( int argc, char** argv )
 {
@@ -11,9 +13,17 @@ int main( int argc, char** argv )
 	SDL_Renderer* window_renderer = NULL;
 	SDL_Texture* window_texture1 = NULL;
 	SDL_Texture* window_texture2 = NULL;
+	SDL_Rect clip;
+	SDL_Rect arr[WALKING_FRAME];
+	int frame = 0;
 
-	Uint8 a = 255;
+	arr[0]= {0, 0, 172, 183};
+	arr[1]= {172, 0, 172, 183};
+	arr[2]= {344, 0, 172, 183};
+	arr[3]= {516, 0, 172, 183};
+	arr[4]= {688, 0, 172, 183};
 
+	clip = {widPos(arr[0]), hiPos(arr[0]), 172, 183};
 
     if (init(&main_window, &window_renderer) == false)
 	{
@@ -40,45 +50,20 @@ int main( int argc, char** argv )
 					{
 						quite = true;
 					}
-					else if (e.type == SDL_KEYDOWN)
-					{
-						switch (e.key.keysym.sym)
-						{
-						case SDLK_d:
-							if (a + 32 > 255)
-							{
-								a = 255;
-							}
-							else
-							{
-								a += 32;
-							}
-							break;
-						case SDLK_f:
-							if (a - 32 < 0)
-							{
-								a = 0;
-							}
-							else
-							{
-								a -= 32;
-							}
-							break;
-						default:
-							break;
-						}
-					}
-						SDL_SetRenderDrawColor(window_renderer,0xff, 0xff, 0xff, 0xff);
-						SDL_RenderClear(window_renderer);
-						SDL_SetTextureBlendMode(window_texture2, SDL_BLENDMODE_BLEND);
-						SDL_SetTextureAlphaMod(window_texture2, a);
-						SDL_RenderCopy(window_renderer, window_texture1, NULL, NULL);
-						SDL_RenderCopy(window_renderer, window_texture2, NULL, NULL);
-						SDL_RenderPresent(window_renderer);
+					
 				}
+				frame++;
+				if (frame / 5 >= WALKING_FRAME)
+				{
+					frame = 0;
+				}
+				SDL_SetRenderDrawColor(window_renderer,0xff, 0xff, 0xff, 0xff);
+				SDL_RenderClear(window_renderer);
+				SDL_RenderCopy(window_renderer, window_texture1, &(arr[frame / 5]), &clip);
+				SDL_RenderPresent(window_renderer);
 			}
-			close(main_window, window_renderer, window_texture1, window_texture2);
-			return (0);
 		}
 	}
+	close(main_window, window_renderer, window_texture1, window_texture2);
+	return (0);
 }

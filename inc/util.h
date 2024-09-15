@@ -15,6 +15,8 @@ SDL_Texture* createTexture(SDL_Renderer* window_renderer,SDL_Surface* loadedSurf
 void closeTexture (SDL_Texture* window_texture);
 void closeWindow(SDL_Window* main_window);
 void closeRenderer(SDL_Renderer* window_renderer);
+int widPos(SDL_Rect clip);
+int hiPos(SDL_Rect clip);
 
 
 #endif //UTIL_H_

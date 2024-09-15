@@ -120,3 +120,13 @@ SDL_Texture* createTexture(SDL_Renderer* window_renderer,SDL_Surface* loadedSurf
 		return(texture);
 	}
 }
+
+int widPos(SDL_Rect clip)
+{
+	return ((SCREEN_WIDTH / 2) - (clip.w / 2));
+}
+
+int hiPos(SDL_Rect clip)
+{
+	return ((SCREEN_HEIGHT / 2) - (clip.h / 2));
+}
